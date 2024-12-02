@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>LED Control</title>
+</head>
+<body>
+  <div class="container">
+    <h1>LED Control</h1>
+    <button id="led-on">Turn ON</button>
+    <button id="led-off">Turn OFF</button>
+    <p id="status">LED is OFF</p>
+  </div>
+
+  <script>
+    const serverURL = 'https://smart-led-production.up.railway.app/led';
+
+    // Turn ON the LED
+    document.getElementById('led-on').addEventListener('click', async () => {
+      const response = await fetch(serverURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ state: true }),
+      });
+      const data = await response.json();
+      document.getElementById('status').innerText = 'LED is ON';
+      console.log(data);
+    });
+
+    // Turn OFF the LED
+    document.getElementById('led-off').addEventListener('click', async () => {
+      const response = await fetch(serverURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ state: false }),
+      });
+      const data = await response.json();
+      document.getElementById('status').innerText = 'LED is OFF';
+      console.log(data);
+    });
+  </script>
+</body>
+</html>
