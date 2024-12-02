@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
     <title>LED Control</title>
+    <style>
+      .online-now {
+  color: #28a745; /* Green color for 'Online now' */
+  font-weight: bold;
+  font-size: 16px;
+}
+    </style>
   </head>
   <body>
     <div class="container">
@@ -135,10 +142,10 @@ async function fetchHardwareStatus() {
     statusIndicator.className = data.online ? "online" : "offline";
 
     if (data.online) {
-      lastSeen.textContent = "Online now";
+      lastSeen.innerHTML = '<span class="online-now">Online now</span>';
     } else if (data.lastSeen) {
       const [date, time] = data.lastSeen.split(", ");
-      lastSeen.innerHTML = ` <span class="date">${date}</span>, <span class="time">${time}</span>`;
+      lastSeen.innerHTML = `Last Seen: <span class="date">${date}</span>, <span class="time">${time}</span>`;
     } else {
       lastSeen.textContent = "Never";
     }
