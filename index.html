@@ -145,7 +145,7 @@ async function fetchHardwareStatus() {
       lastSeen.innerHTML = '<span class="online-now">Online now</span>';
     } else if (data.lastSeen) {
       const [date, time] = data.lastSeen.split(", ");
-      lastSeen.innerHTML = `Last Seen: <span class="date">${date}</span>, <span class="time">${time}</span>`;
+      lastSeen.innerHTML = ` <span class="date">${date}</span>, <span class="time">${time}</span>`;
     } else {
       lastSeen.textContent = "Never";
     }
