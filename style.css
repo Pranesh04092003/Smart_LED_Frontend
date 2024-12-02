@@ -11,6 +11,15 @@ body {
     flex-direction: column;
 }
 
+.online {
+  color: green;
+}
+
+.offline {
+  color: red;
+}
+
+
 .container {
     text-align: center;
     background: #fff;
