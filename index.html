@@ -110,30 +110,32 @@
       });
 
       // Fetch and update hardware status
-      async function fetchHardwareStatus() {
-        try {
-          const response = await fetch(hardwareURL);
-          const data = await response.json();
+      // Fetch and update hardware status
+async function fetchHardwareStatus() {
+  try {
+    const response = await fetch(hardwareURL);
+    const data = await response.json();
 
-          // Update hardware status in the UI
-          const statusIndicator = document.getElementById("status-indicator");
-          statusIndicator.textContent = data.online ? "Online" : "Offline";
-          statusIndicator.style.color = data.online ? "green" : "red";
+    // Update hardware status in the UI
+    const statusIndicator = document.getElementById("status-indicator");
+    statusIndicator.textContent = data.online ? "Online" : "Offline";
+    statusIndicator.style.color = data.online ? "green" : "red";
 
-          console.log("Hardware status fetched:", data);
-        } catch (error) {
-          console.error("Error fetching hardware status:", error);
-        }
-      }
+    console.log("Hardware status fetched:", data);
+  } catch (error) {
+    console.error("Error fetching hardware status:", error);
+  }
+}
 
-      // Poll hardware status every 5 seconds
-      setInterval(fetchHardwareStatus, 5000);
+// Poll hardware status every 3 seconds
+setInterval(fetchHardwareStatus, 3000);
 
-      // Fetch both LED state and hardware status on page load
-      window.onload = () => {
-        fetchLEDState();
-        fetchHardwareStatus();
-      };
+// Fetch both LED state and hardware status on page load
+window.onload = () => {
+  fetchLEDState();
+  fetchHardwareStatus();
+};
+
     </script>
   </body>
 </html>
