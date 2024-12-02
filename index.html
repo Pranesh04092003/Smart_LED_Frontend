@@ -132,9 +132,16 @@ async function fetchHardwareStatus() {
     const lastSeen = document.getElementById("last-seen");
 
     statusIndicator.textContent = data.online ? "Online" : "Offline";
-    statusIndicator.className = data.online ? "online" : "offline"; // Apply the class for styling
+    statusIndicator.className = data.online ? "online" : "offline";
 
-    lastSeen.textContent = data.online ? "Online now" : data.lastSeen ? ` ${data.lastSeen}` : "Never";
+    if (data.online) {
+      lastSeen.textContent = "Online now";
+    } else if (data.lastSeen) {
+      const [date, time] = data.lastSeen.split(", ");
+      lastSeen.innerHTML = `Last Seen: <span class="date">${date}</span>, <span class="time">${time}</span>`;
+    } else {
+      lastSeen.textContent = "Never";
+    }
 
     console.log("Hardware status fetched:", data);
   } catch (error) {
