@@ -111,7 +111,7 @@
 
       // Fetch and update hardware status
       // Fetch and update hardware status
-async function fetchHardwareStatus() {
+    async function fetchHardwareStatus() {
   try {
     const response = await fetch(hardwareURL);
     const data = await response.json();
@@ -119,7 +119,7 @@ async function fetchHardwareStatus() {
     // Update hardware status in the UI
     const statusIndicator = document.getElementById("status-indicator");
     statusIndicator.textContent = data.online ? "Online" : "Offline";
-    statusIndicator.style.color = data.online ? "green" : "red";
+    statusIndicator.className = data.online ? "online" : "offline"; // Apply the class for styling
 
     console.log("Hardware status fetched:", data);
   } catch (error) {
