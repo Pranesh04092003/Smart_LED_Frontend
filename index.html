@@ -20,133 +20,86 @@
         oninput="updateBrightness(this.value)"
       />
       <p id="slider-value">0</p>
-      <p id="status">
-        LED is <span id="connection-status" class="offline">OFFLINE</span>
-      </p>
+      <p id="status">LED is OFF</p>
     </div>
 
-    <script >
-
-
-
+    <script>
       const serverURL = "https://smart-led-production.up.railway.app/led";
 
-// Update connection status and styling
-function updateConnectionStatus(isOnline) {
-  const connectionStatus = document.getElementById("connection-status");
-  if (isOnline) {
-    connectionStatus.textContent = "ONLINE";
-    connectionStatus.className = "online"; // Apply online styling
-  } else {
-    connectionStatus.textContent = "OFFLINE";
-    connectionStatus.className = "offline"; // Apply offline styling
-  }
-}
+      // Fetch the current LED state and brightness on page load
+      async function fetchLEDState() {
+        try {
+          const response = await fetch(serverURL);
+          const data = await response.json();
 
-// Fetch the current LED state and brightness on page load
-async function fetchLEDState() {
-  try {
-    const response = await fetch(serverURL);
-    if (!response.ok) throw new Error("Failed to fetch LED state");
-    const data = await response.json();
+          // Update the slider value and the display
+          const slider = document.getElementById("slider");
+          const sliderValue = document.getElementById("slider-value");
+          const status = document.getElementById("status");
 
-    // Update slider value and UI status
-    const slider = document.getElementById("slider");
-    const sliderValue = document.getElementById("slider-value");
-    const status = document.getElementById("status");
+          // Set the slider and slider value text based on the LED state
+          slider.value = data.brightness; // Set the slider value to the current brightness
+          sliderValue.textContent = data.brightness; // Update the displayed value
+          status.textContent = data.state ? "LED is ON" : "LED is OFF"; // Update the status text
 
-    slider.value = data.brightness; // Sync slider with brightness
-    sliderValue.textContent = data.brightness; // Display brightness
-    status.textContent = data.state ? "LED is ON" : "LED is OFF"; // Update status text
+          // Disable the slider if the LED is OFF
+          slider.disabled = !data.state;
 
-    // Enable or disable the slider based on LED state
-    slider.disabled = !data.state;
+          console.log("LED state fetched:", data);
+        } catch (error) {
+          console.error("Error fetching LED state:", error);
+        }
+      }
 
-    // Update connection status
-    updateConnectionStatus(true);
+      // Function to update the slider value on the UI and send it to the server
+      async function updateBrightness(value) {
+        document.getElementById("slider-value").textContent = value;
+        try {
+          const response = await fetch(serverURL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ brightness: parseInt(value), state: true }), // Ensure state is ON
+          });
+          const data = await response.json();
+          console.log("Brightness updated:", data);
+        } catch (error) {
+          console.error("Error updating brightness:", error);
+        }
+      }
 
-    console.log("LED state fetched:", data);
-  } catch (error) {
-    console.error("Error fetching LED state:", error);
+      // Turn ON the LED
+      document.getElementById("led-on").addEventListener("click", async () => {
+        const response = await fetch(serverURL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ state: true, brightness: 100 }), // Default brightness when turned on
+        });
+        const data = await response.json();
+        document.getElementById("status").innerText = "LED is ON";
+        document.getElementById("slider").value = data.ledState.brightness; // Set brightness on slider
+        document.getElementById("slider-value").textContent = data.ledState.brightness;
+        document.getElementById("slider").disabled = false; // Enable slider when LED is ON
+        console.log(data);
+      });
 
-    // Update connection status to offline on error
-    updateConnectionStatus(false);
-  }
-}
+      // Turn OFF the LED
+      document.getElementById("led-off").addEventListener("click", async () => {
+        const response = await fetch(serverURL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ state: false, brightness: 0 }), // Set brightness to 0 when off
+        });
+        const data = await response.json();
+        document.getElementById("status").innerText = "LED is OFF";
+        document.getElementById("slider").value = 0; // Reset slider to 0
+        document.getElementById("slider-value").textContent = 0;
+        document.getElementById("slider").disabled = true; // Disable slider when LED is OFF
+        console.log(data);
+      });
 
-// Update the brightness
-async function updateBrightness(value) {
-  document.getElementById("slider-value").textContent = value;
-  try {
-    const response = await fetch(serverURL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ brightness: parseInt(value), state: true }),
-    });
-    if (!response.ok) throw new Error("Failed to update brightness");
-    const data = await response.json();
-    console.log("Brightness updated:", data);
-
-    // Ensure connection status remains online
-    updateConnectionStatus(true);
-  } catch (error) {
-    console.error("Error updating brightness:", error);
-    updateConnectionStatus(false);
-  }
-}
-
-// Turn LED ON
-document.getElementById("led-on").addEventListener("click", async () => {
-  try {
-    const response = await fetch(serverURL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ state: true, brightness: 100 }),
-    });
-    if (!response.ok) throw new Error("Failed to turn LED ON");
-    const data = await response.json();
-    document.getElementById("status").innerText = "LED is ON";
-    document.getElementById("slider").value = data.ledState.brightness;
-    document.getElementById("slider-value").textContent =
-      data.ledState.brightness;
-    document.getElementById("slider").disabled = false;
-
-    // Update connection status
-    updateConnectionStatus(true);
-    console.log(data);
-  } catch (error) {
-    console.error("Error turning LED ON:", error);
-    updateConnectionStatus(false);
-  }
-});
-
-// Turn LED OFF
-document.getElementById("led-off").addEventListener("click", async () => {
-  try {
-    const response = await fetch(serverURL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ state: false, brightness: 0 }),
-    });
-    if (!response.ok) throw new Error("Failed to turn LED OFF");
-    const data = await response.json();
-    document.getElementById("status").innerText = "LED is OFF";
-    document.getElementById("slider").value = 0;
-    document.getElementById("slider-value").textContent = 0;
-    document.getElementById("slider").disabled = true;
-
-    // Update connection status
-    updateConnectionStatus(true);
-    console.log(data);
-  } catch (error) {
-    console.error("Error turning LED OFF:", error);
-    updateConnectionStatus(false);
-  }
-});
-
-// Fetch LED state on page load
-window.onload = fetchLEDState;
-
+      // Call fetchLEDState when the page loads
+      window.onload = fetchLEDState;
     </script>
   </body>
 </html>
+
