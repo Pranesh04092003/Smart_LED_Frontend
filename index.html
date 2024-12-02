@@ -20,23 +20,34 @@
   <script>
     const serverURL = "https://smart-led-production.up.railway.app/led";
 
-    async function fetchLEDState() {
-      try {
-        const response = await fetch(serverURL);
-        const data = await response.json();
+   async function fetchLEDState() {
+  try {
+    const response = await fetch(serverURL);
+    const data = await response.json();
 
-        document.getElementById("slider").value = data.brightness;
-        document.getElementById("slider-value").textContent = data.brightness;
-        document.getElementById("status").textContent = data.state ? "LED is ON" : "LED is OFF";
+    // Update LED state and brightness
+    document.getElementById("slider").value = data.brightness;
+    document.getElementById("slider-value").textContent = data.brightness;
+    document.getElementById("status").textContent = data.state ? "LED is ON" : "LED is OFF";
 
-        // Update hardware status
-        const hardwareStatus = document.getElementById("hardware-status");
-        hardwareStatus.textContent = `Status: ${data.online ? "Online" : "Offline"}`;
-        document.getElementById("slider").disabled = !data.state || !data.online;
-      } catch (error) {
-        console.error("Error fetching LED state:", error);
-      }
+    // Update hardware status
+    const statusText = document.getElementById("status-text");
+    statusText.textContent = data.online ? "Online" : "Offline";
+
+    if (data.online) {
+      statusText.classList.add("online");
+      statusText.classList.remove("offline");
+    } else {
+      statusText.classList.add("offline");
+      statusText.classList.remove("online");
     }
+
+    document.getElementById("slider").disabled = !data.state || !data.online;
+  } catch (error) {
+    console.error("Error fetching LED state:", error);
+  }
+}
+
 
     async function updateBrightness(value) {
       document.getElementById("slider-value").textContent = value;
