@@ -121,48 +121,31 @@
   });
 
   // Fetch and update hardware status
-  // Fetch and update hardware status
   async function fetchHardwareStatus() {
-    try {
-      const response = await fetch(hardwareURL);
-      if (!response.ok) throw new Error("Failed to fetch hardware status");
+  try {
+    const response = await fetch(hardwareURL);
+    if (!response.ok) throw new Error("Failed to fetch hardware status");
 
-      const data = await response.json();
-      const statusIndicator = document.getElementById("status-indicator");
-      const lastSeen = document.getElementById("last-seen");
+    const data = await response.json();
+    const statusIndicator = document.getElementById("status-indicator");
+    const lastSeen = document.getElementById("last-seen");
 
-      // Update online status
-      statusIndicator.textContent = data.online ? "Online" : "Offline";
-      statusIndicator.className = data.online ? "online" : "offline"; // Apply the class for styling
+    statusIndicator.textContent = data.online ? "Online" : "Offline";
+    statusIndicator.className = data.online ? "online" : "offline"; // Apply the class for styling
 
-      // Update last seen timestamp only when device goes offline
-      if (data.online) {
-        // If device is online, clear any previous last seen
-        lastSeen.textContent = "Currently online";
-      } else if (data.lastPing) {
-        // If device is offline, display the last ping time as last seen
-        const lastPingDate = new Date(data.lastPing);
-        const options = { 
-          timeZone: 'Asia/Kolkata', 
-          weekday: 'short', 
-          year: 'numeric', 
-          month: 'short', 
-          day: 'numeric', 
-          hour: '2-digit', 
-          minute: '2-digit', 
-          second: '2-digit' 
-        };
-        lastSeen.textContent = lastPingDate.toLocaleString('en-IN', options); // Convert to IST
-      } else {
-        lastSeen.textContent = "Never";
-      }
-
-      console.log("Hardware status fetched:", data);
-    } catch (error) {
-      console.error("Error fetching hardware status:", error);
-      showErrorMessage("Unable to fetch hardware status. Please try again later.");
+    if (data.online) {
+      lastSeen.textContent = "Last Seen: Online now";
+    } else {
+      lastSeen.textContent = `Last Seen: ${data.lastSeen}`;
     }
+
+    console.log("Hardware status fetched:", data);
+  } catch (error) {
+    console.error("Error fetching hardware status:", error);
+    showErrorMessage("Unable to fetch hardware status. Please try again later.");
   }
+}
+
 
   // Display error message to the user
   function showErrorMessage(message) {
