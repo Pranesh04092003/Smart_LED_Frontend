@@ -121,7 +121,8 @@
   });
 
   // Fetch and update hardware status
-  async function fetchHardwareStatus() {
+  // Fetch and update hardware status
+async function fetchHardwareStatus() {
   try {
     const response = await fetch(hardwareURL);
     if (!response.ok) throw new Error("Failed to fetch hardware status");
@@ -133,11 +134,7 @@
     statusIndicator.textContent = data.online ? "Online" : "Offline";
     statusIndicator.className = data.online ? "online" : "offline"; // Apply the class for styling
 
-    if (data.online) {
-      lastSeen.textContent = "Online now";
-    } else {
-      lastSeen.textContent = `Last Seen: ${data.lastSeen}`;
-    }
+    lastSeen.textContent = data.online ? "Online now" : data.lastSeen ? `Last Seen: ${data.lastSeen}` : "Never";
 
     console.log("Hardware status fetched:", data);
   } catch (error) {
