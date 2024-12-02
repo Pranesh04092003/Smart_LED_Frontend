@@ -1,9 +1,4 @@
-/* style.css */
-
-#slider{
-width:170px;
-}
-
+/* Global Styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -13,6 +8,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    flex-direction: column;
 }
 
 .container {
@@ -21,6 +17,8 @@ body {
     padding: 20px 40px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px; /* Added max-width for better layout on mobile */
 }
 
 h1 {
@@ -39,10 +37,17 @@ button {
     cursor: pointer;
     margin: 10px;
     transition: background-color 0.3s ease;
+    width: 100%; /* Button width set to 100% for better mobile handling */
+    max-width: 150px; /* Max width for large buttons */
 }
 
 button:hover {
     background-color: #0056b3;
+}
+
+#slider {
+    width: 100%; /* Ensures the slider takes full width */
+    max-width: 300px; /* Limits max width for better appearance */
 }
 
 #status {
@@ -50,4 +55,35 @@ button:hover {
     font-size: 1.2rem;
     font-weight: bold;
     color: #555;
+}
+
+#slider-value {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+/* Media Queries for Mobile Responsiveness */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    button {
+        font-size: 1rem;
+        padding: 12px;
+    }
+
+    #slider {
+        width: 100%;
+    }
+
+    #slider-value {
+        font-size: 1.2rem;
+    }
+
+    .container {
+        padding: 15px;
+        width: 90%;
+        max-width: 350px; /* Ensures the container adapts better on smaller screens */
+    }
 }
