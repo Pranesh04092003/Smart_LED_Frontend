@@ -134,7 +134,7 @@ async function fetchHardwareStatus() {
     statusIndicator.textContent = data.online ? "Online" : "Offline";
     statusIndicator.className = data.online ? "online" : "offline"; // Apply the class for styling
 
-    lastSeen.textContent = data.online ? "Online now" : data.lastSeen ? `Last Seen: ${data.lastSeen}` : "Never";
+    lastSeen.textContent = data.online ? "Online now" : data.lastSeen ? ` ${data.lastSeen}` : "Never";
 
     console.log("Hardware status fetched:", data);
   } catch (error) {
