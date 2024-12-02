@@ -1,106 +1,119 @@
 /* Global Styles */
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  flex-direction: column;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+    text-align: center;
 }
 
 .container {
-  text-align: center;
-  background: #fff;
-  padding: 20px 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px; /* Added max-width for better layout on mobile */
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 420px; /* Updated max-width for optimal view on all devices */
 }
 
 h1 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-  color: #333;
+    font-size: 2.2rem;
+    margin-bottom: 25px;
+    color: #333;
+    line-height: 1.4;
 }
 
 button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 10px 20px;
-  font-size: 1rem;
-  cursor: pointer;
-  margin: 10px;
-  transition: background-color 0.3s ease;
-  width: 100%; /* Button width set to 100% for better mobile handling */
-  max-width: 150px; /* Max width for large buttons */
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 18px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 10px 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+    max-width: 160px; /* Max width for larger buttons */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 button:hover {
-  background-color: #0056b3;
+    background-color: #0056b3;
+    transform: translateY(-2px); /* Adds slight elevation effect */
 }
 
 #slider {
-  width: 100%; /* Ensures the slider takes full width */
-  max-width: 300px; /* Limits max width for better appearance */
+    width: 100%; /* Full width for responsiveness */
+    max-width: 320px; /* Controls max slider size for better layout */
+    margin-top: 20px;
 }
 
 #status {
-  margin-top: 20px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #555;
+    margin-top: 20px;
+    font-size: 1.4rem;
+    font-weight: bold;
 }
 
 #slider-value {
-  font-size: 1.2rem;
-  margin-top: 10px;
+    font-size: 1.3rem;
+    margin-top: 15px;
+    color: #333;
+    font-weight: 600;
 }
 
-/* Connection Status Styles */
-#connection-status {
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-weight: bold;
+/* Styling for Status Indicator */
+#status-text {
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-top: 20px;
 }
 
 .online {
-  color: white;
-  background-color: green;
+    color: white;
+    background-color: green;
 }
 
 .offline {
-  color: white;
-  background-color: red;
+    color: white;
+    background-color: red;
 }
 
 /* Media Queries for Mobile Responsiveness */
 @media (max-width: 600px) {
-  h1 {
-    font-size: 1.5rem;
-  }
+    h1 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
 
-  button {
-    font-size: 1rem;
-    padding: 12px;
-  }
+    button {
+        font-size: 0.95rem;
+        padding: 10px 14px;
+        max-width: 140px; /* Smaller button size for compact view */
+    }
 
-  #slider {
-    width: 100%;
-  }
+    #slider {
+        width: 100%;
+    }
 
-  #slider-value {
-    font-size: 1.2rem;
-  }
+    #slider-value {
+        font-size: 1.2rem;
+    }
 
-  .container {
-    padding: 15px;
-    width: 90%;
-    max-width: 350px; /* Ensures the container adapts better on smaller screens */
-  }
+    .container {
+        padding: 20px;
+        width: 95%;
+        max-width: 360px; /* Scales better on small screens */
+    }
+
+    #status {
+        font-size: 1.2rem;
+    }
 }
