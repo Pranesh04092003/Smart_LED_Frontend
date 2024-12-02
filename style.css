@@ -72,30 +72,34 @@ button:hover {
 }
 
 /* Hardware status styles */
-#hardware-status {
-    font-size: 1.2rem;
-    margin-top: 20px;
-    color: #555;
+/* CSS for Last Seen styling */
+#last-seen {
+  font-size: 16px;
+  color: #333; /* Default color for text */
 }
 
-#status-indicator {
-    font-weight: bold;
-    font-size: 1.2rem;
-    transition: color 0.3s ease;
-    padding: 5px;
-    border-radius: 5px;
-    display: inline-block;
+/* Date and Time styling */
+#last-seen .date {
+  color: #007bff; /* Blue for the date */
+  font-weight: bold;
 }
 
+#last-seen .time {
+  color: #28a745; /* Green for the time */
+  font-style: italic;
+}
+
+/* Online and Offline styling */
 #status-indicator.online {
-    color: #4caf50;
-    background-color: #e0f7e0;
+  color: #28a745; /* Green for online */
+  font-weight: bold;
 }
 
 #status-indicator.offline {
-    color: #f44336;
-    background-color: #fddede;
+  color: #dc3545; /* Red for offline */
+  font-weight: bold;
 }
+
 
 /* Media Queries for Mobile Responsiveness */
 @media (max-width: 600px) {
