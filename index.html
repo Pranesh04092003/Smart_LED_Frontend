@@ -1,104 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
-    <title>LED Control</title>
-  </head>
-  <body>
-    <div class="container">
-      <h1>LED Control</h1>
-      <button id="led-on">Turn ON</button>
-      <button id="led-off">Turn OFF</button><br />
-      <input
-        type="range"
-        id="slider"
-        min="0"
-        max="255"
-        value="0"
-        oninput="updateBrightness(this.value)"
-      />
-      <p id="slider-value">0</p>
-      <p id="status">LED is OFF</p>
-    </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>LED Control</title>
+</head>
+<body>
+  <div class="container">
+    <h1>LED Control</h1>
+    <p id="hardware-status">Status: <span id="status-text">Checking...</span></p>
+    <button id="led-on">Turn ON</button>
+    <button id="led-off">Turn OFF</button><br />
+    <input type="range" id="slider" min="0" max="255" value="0" oninput="updateBrightness(this.value)" />
+    <p id="slider-value">0</p>
+    <p id="status">LED is OFF</p>
+  </div>
 
-    <script>
-      const serverURL = "https://smart-led-production.up.railway.app/led";
+  <script>
+    const serverURL = "https://smart-led-production.up.railway.app/led";
 
-      // Fetch the current LED state and brightness on page load
-      async function fetchLEDState() {
-        try {
-          const response = await fetch(serverURL);
-          const data = await response.json();
+    async function fetchLEDState() {
+      try {
+        const response = await fetch(serverURL);
+        const data = await response.json();
 
-          // Update the slider value and the display
-          const slider = document.getElementById("slider");
-          const sliderValue = document.getElementById("slider-value");
-          const status = document.getElementById("status");
+        document.getElementById("slider").value = data.brightness;
+        document.getElementById("slider-value").textContent = data.brightness;
+        document.getElementById("status").textContent = data.state ? "LED is ON" : "LED is OFF";
 
-          // Set the slider and slider value text based on the LED state
-          slider.value = data.brightness; // Set the slider value to the current brightness
-          sliderValue.textContent = data.brightness; // Update the displayed value
-          status.textContent = data.state ? "LED is ON" : "LED is OFF"; // Update the status text
-
-          // Disable the slider if the LED is OFF
-          slider.disabled = !data.state;
-
-          console.log("LED state fetched:", data);
-        } catch (error) {
-          console.error("Error fetching LED state:", error);
-        }
+        // Update hardware status
+        const hardwareStatus = document.getElementById("hardware-status");
+        hardwareStatus.textContent = `Status: ${data.online ? "Online" : "Offline"}`;
+        document.getElementById("slider").disabled = !data.state || !data.online;
+      } catch (error) {
+        console.error("Error fetching LED state:", error);
       }
+    }
 
-      // Function to update the slider value on the UI and send it to the server
-      async function updateBrightness(value) {
-        document.getElementById("slider-value").textContent = value;
-        try {
-          const response = await fetch(serverURL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ brightness: parseInt(value), state: true }), // Ensure state is ON
-          });
-          const data = await response.json();
-          console.log("Brightness updated:", data);
-        } catch (error) {
-          console.error("Error updating brightness:", error);
-        }
-      }
-
-      // Turn ON the LED
-      document.getElementById("led-on").addEventListener("click", async () => {
-        const response = await fetch(serverURL, {
+    async function updateBrightness(value) {
+      document.getElementById("slider-value").textContent = value;
+      try {
+        await fetch(serverURL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ state: true, brightness: 100 }), // Default brightness when turned on
+          body: JSON.stringify({ brightness: parseInt(value), state: true }),
         });
-        const data = await response.json();
-        document.getElementById("status").innerText = "LED is ON";
-        document.getElementById("slider").value = data.ledState.brightness; // Set brightness on slider
-        document.getElementById("slider-value").textContent = data.ledState.brightness;
-        document.getElementById("slider").disabled = false; // Enable slider when LED is ON
-        console.log(data);
-      });
+      } catch (error) {
+        console.error("Error updating brightness:", error);
+      }
+    }
 
-      // Turn OFF the LED
-      document.getElementById("led-off").addEventListener("click", async () => {
-        const response = await fetch(serverURL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ state: false, brightness: 0 }), // Set brightness to 0 when off
-        });
-        const data = await response.json();
-        document.getElementById("status").innerText = "LED is OFF";
-        document.getElementById("slider").value = 0; // Reset slider to 0
-        document.getElementById("slider-value").textContent = 0;
-        document.getElementById("slider").disabled = true; // Disable slider when LED is OFF
-        console.log(data);
+    document.getElementById("led-on").addEventListener("click", async () => {
+      await fetch(serverURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ state: true, brightness: 100 }),
       });
+      fetchLEDState();
+    });
 
-      // Call fetchLEDState when the page loads
-      window.onload = fetchLEDState;
-    </script>
-  </body>
+    document.getElementById("led-off").addEventListener("click", async () => {
+      await fetch(serverURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ state: false, brightness: 0 }),
+      });
+      fetchLEDState();
+    });
+
+    setInterval(fetchLEDState, 5000); // Poll every 5 seconds
+    window.onload = fetchLEDState;
+  </script>
+</body>
 </html>
